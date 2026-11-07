@@ -1,4 +1,4 @@
-﻿import { WalletPanel } from "@/components/WalletPanel";
+import { WalletPanel } from "@/components/WalletPanel";
 import { BalancePanel } from "@/components/BalancePanel";
 import { ShieldCheck, Activity, TerminalSquare, AlertTriangle } from "lucide-react";
 

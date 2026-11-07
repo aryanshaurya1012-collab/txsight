@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { ClientProvider } from "@solana/react";
 import { client } from "@/solana/client";

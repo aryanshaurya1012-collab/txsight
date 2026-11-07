@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Providers } from "./Providers";
@@ -17,7 +17,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className={`${inter.className} min-h-screen flex flex-col`}>
+      <body className={`${inter.className} min-h-screen flex flex-col bg-[hsl(var(--background))] text-[hsl(var(--text-primary))] antialiased selection:bg-[hsl(var(--accent))] selection:text-[hsl(var(--accent-foreground))]`}>
         <Providers>
           {children}
         </Providers>

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useWallets, useWalletStatus, useConnectedWallet, useConnect, useDisconnect } from "@solana/kit-plugin-wallet/react";
 import { useClient } from "@solana/react";

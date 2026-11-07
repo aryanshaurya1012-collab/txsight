@@ -1,29 +1,28 @@
-﻿@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
 
-@layer base {
-  :root {
-    --background: 222 31% 8%;
-    --surface-primary: 219 46% 12%;
-    --surface-secondary: 218 41% 16%;
-    --accent: 188 86% 53%;
-    --accent-foreground: 188 90% 10%;
-    --text-primary: 218 54% 96%;
-    --text-secondary: 214 20% 67%;
-    
-    --success: 142 71% 45%;
-    --warning: 38 92% 50%;
-    --error: 348 83% 47%;
-  }
+:root {
+  --background: 222 31% 8%;
+  /* #090F1D */
+  --surface-primary: 219 46% 12%;
+  /* #111B2D */
+  --surface-secondary: 218 41% 16%;
+  /* #18253A */
+  --accent: 188 86% 53%;
+  /* cyan */
+  --accent-foreground: 188 90% 10%;
+  --text-primary: 218 54% 96%;
+  /* #F4F7FC */
+  --text-secondary: 214 20% 67%;
+  /* #9AA9BD */
 
-  body {
-    @apply bg-[hsl(var(--background))] text-[hsl(var(--text-primary))] font-sans antialiased selection:bg-[hsl(var(--accent))] selection:text-[hsl(var(--accent-foreground))];
-  }
+  --success: 142 71% 45%;
+  --warning: 38 92% 50%;
+  --error: 348 83% 47%;
 }
 
-@layer utilities {
-  .glass-panel {
-    @apply bg-[hsl(var(--surface-primary))] border border-[hsl(var(--surface-secondary))] rounded-xl shadow-lg;
-  }
+.glass-panel {
+  background-color: hsl(var(--surface-primary));
+  border: 1px solid hsl(var(--surface-secondary));
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }

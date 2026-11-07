@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useClient, useRequest } from "@solana/react";
 import { useMemo } from "react";
