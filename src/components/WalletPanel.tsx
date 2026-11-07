@@ -3,6 +3,7 @@
 import { useWallets, useWalletStatus, useConnectedWallet, useConnect, useDisconnect } from "@solana/kit-plugin-wallet/react";
 import { useClient } from "@solana/react";
 import { Wallet, LogOut, Loader2 } from "lucide-react";
+import { useState, useEffect } from "react";
 
 export function WalletPanel() {
   const client = useClient();
@@ -12,19 +13,39 @@ export function WalletPanel() {
   const connect = useConnect(client);
   const disconnect = useDisconnect(client);
 
+  // Prevent SSR hydration mismatch by waiting for client mount
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const phantomWallet = wallets.find((w) => w.name.toLowerCase().includes("phantom"));
 
   const handleConnect = async () => {
-    if (phantomWallet) {
-      await connect.dispatchAsync(phantomWallet);
-    } else if (wallets.length > 0) {
-      await connect.dispatchAsync(wallets[0]);
-    } else {
-      window.open("https://phantom.app/", "_blank");
+    try {
+      if (phantomWallet) {
+        await connect.dispatchAsync(phantomWallet);
+      } else if (wallets.length > 0) {
+        await connect.dispatchAsync(wallets[0]);
+      } else {
+        window.open("https://phantom.app/", "_blank");
+      }
+    } catch (error) {
+      // Gracefully handle user rejection or wallet lock states
+      console.warn("Wallet connection cancelled or failed:", error);
     }
   };
 
-  if (status === "pending" || status === "connecting" || status === "reconnecting") {
+  const handleDisconnect = async () => {
+    try {
+      await disconnect.dispatchAsync();
+    } catch (error) {
+      console.warn("Wallet disconnect failed:", error);
+    }
+  };
+
+  // Render a consistent placeholder on the server and initial client pass
+  if (!mounted || status === "pending" || status === "connecting" || status === "reconnecting") {
     return (
       <button disabled className="flex items-center gap-2 bg-[hsl(var(--surface-secondary))] text-[hsl(var(--text-secondary))] px-4 py-2 rounded-lg font-medium border border-[hsl(var(--surface-primary))]">
         <Loader2 className="w-4 h-4 animate-spin" />
@@ -43,7 +64,8 @@ export function WalletPanel() {
           </span>
         </div>
         <button
-          onClick={() => disconnect.dispatchAsync()}
+          onClick={handleDisconnect}
+          title="Disconnect Wallet"
           className="p-2 hover:bg-[hsl(var(--surface-secondary))] rounded-lg transition-colors text-[hsl(var(--text-secondary))] hover:text-red-400"
         >
           <LogOut className="w-4 h-4" />
