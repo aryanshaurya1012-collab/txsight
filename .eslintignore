@@ -1,0 +1,7 @@
+_bad_node_modules
+_bad_node_modules/**
+.next
+node_modules
+dist
+build
+
