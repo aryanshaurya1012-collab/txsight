@@ -7,7 +7,7 @@ import { useConnectedWallet } from "@solana/kit-plugin-wallet/react";
 export function BalancePanel() {
   const client = useClient();
   const connected = useConnectedWallet(client);
-  
+
   const source = useMemo(() => {
     if (!connected) return null;
     return client.rpc.getBalance(connected.account.address, { commitment: 'confirmed' });
@@ -34,8 +34,8 @@ export function BalancePanel() {
           </>
         )}
       </div>
-      <button 
-        onClick={refresh} 
+      <button
+        onClick={refresh}
         disabled={status === "fetching"}
         className="text-xs text-[hsl(var(--text-secondary))] hover:text-white transition-colors w-fit mt-2"
       >
