@@ -3,7 +3,17 @@
 import { useWallets, useWalletStatus, useConnectedWallet, useConnect, useDisconnect } from "@solana/kit-plugin-wallet/react";
 import { useClient } from "@solana/react";
 import { Wallet, LogOut, Loader2 } from "lucide-react";
-import { useState, useEffect } from "react";
+import { useSyncExternalStore } from "react";
+
+// Official React pattern for hydration detection without triggering cascading renders
+const emptySubscribe = () => () => { };
+function useHydrated() {
+  return useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false
+  );
+}
 
 export function WalletPanel() {
   const client = useClient();
@@ -13,11 +23,7 @@ export function WalletPanel() {
   const connect = useConnect(client);
   const disconnect = useDisconnect(client);
 
-  // Prevent SSR hydration mismatch by waiting for client mount
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  const mounted = useHydrated();
 
   const phantomWallet = wallets.find((w) => w.name.toLowerCase().includes("phantom"));
 
@@ -31,8 +37,7 @@ export function WalletPanel() {
         window.open("https://phantom.app/", "_blank");
       }
     } catch (error) {
-      // Gracefully handle user rejection or wallet lock states
-      console.warn("Wallet connection cancelled or failed:", error);
+      console.warn("Wallet connection cancelled or closed:", error);
     }
   };
 
@@ -44,10 +49,12 @@ export function WalletPanel() {
     }
   };
 
-  // Render a consistent placeholder on the server and initial client pass
   if (!mounted || status === "pending" || status === "connecting" || status === "reconnecting") {
     return (
-      <button disabled className="flex items-center gap-2 bg-[hsl(var(--surface-secondary))] text-[hsl(var(--text-secondary))] px-4 py-2 rounded-lg font-medium border border-[hsl(var(--surface-primary))]">
+      <button
+        disabled
+        className="flex items-center gap-2 bg-[hsl(var(--surface-secondary))] text-[hsl(var(--text-secondary))] px-4 py-2 rounded-lg font-medium border border-[hsl(var(--surface-primary))] opacity-80"
+      >
         <Loader2 className="w-4 h-4 animate-spin" />
         Connecting...
       </button>
