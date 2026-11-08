@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useClient, useSignAndSendTransaction } from "@solana/react";
 import { useConnectedWallet } from "@solana/kit-plugin-wallet/react";
 import { address, getBase58Decoder } from "@solana/kit";
-import { WalletPanel } from "@/components/WalletPanel";
 import { BalancePanel } from "@/components/BalancePanel";
+import { Navbar } from "@/components/Navbar";
 import { toast } from "sonner";
 import { motion, type Variants } from "framer-motion";
 import {
@@ -133,11 +133,10 @@ function ExecuteButton({
       whileTap={{ scale: 0.96 }}
       onClick={() => onExecute(signAndSendTransaction)}
       disabled={isExecuting}
-      className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 ${
-        verdict === "WARNING"
+      className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 ${verdict === "WARNING"
           ? "bg-gradient-to-r from-amber-500 to-amber-400 text-black hover:brightness-110 shadow-[0_0_20px_rgba(245,158,11,0.35)]"
           : "gradient-sweep bg-gradient-to-r from-[#9945FF] via-[#14F195] to-[#9945FF] text-black hover:brightness-110 shadow-[0_0_25px_rgba(20,241,149,0.45)] animate-pulse"
-      } disabled:opacity-50 disabled:cursor-not-allowed`}
+        } disabled:opacity-50 disabled:cursor-not-allowed`}
     >
       {isExecuting ? (
         <>
@@ -331,35 +330,7 @@ export default function Dashboard() {
       <div className="absolute -bottom-24 left-12 w-[450px] h-[450px] bg-[#9945FF]/14 rounded-full blur-[110px] pointer-events-none -z-10 solana-orb-1" />
 
       {/* Navigation Bar */}
-      <nav className="border-b border-white/10 bg-[#0b091a]/70 backdrop-blur-xl sticky top-0 z-50 transition-all duration-300">
-        <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-8">
-            <div className="flex items-center gap-2.5">
-              <div className="p-1.5 rounded-lg bg-gradient-to-br from-[#9945FF] to-[#14F195] shadow-[0_0_15px_rgba(20,241,149,0.35)]">
-                <ShieldCheck className="w-5 h-5 text-black" />
-              </div>
-              <span className="text-lg font-bold text-white tracking-tight bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text">
-                TxSight
-              </span>
-            </div>
-            <div className="hidden md:flex items-center gap-6 text-sm font-medium text-[hsl(var(--text-secondary))]">
-              <span className="text-[#14F195] font-semibold flex items-center gap-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#14F195] shadow-[0_0_8px_#14F195]" />
-                Dashboard
-              </span>
-              <span className="hover:text-white cursor-not-allowed opacity-50 transition-colors">Inspector</span>
-            </div>
-          </div>
-
-          <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-1.5 bg-white/5 backdrop-blur-md px-3 py-1 rounded-full border border-amber-400/20 shadow-[0_0_12px_rgba(245,158,11,0.15)]">
-              <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
-              <span className="text-xs font-mono font-medium text-amber-300 uppercase tracking-wider">Devnet</span>
-            </div>
-            <WalletPanel />
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Main Dashboard Animated Container */}
       <motion.main
@@ -422,11 +393,10 @@ export default function Dashboard() {
                 value={inputText}
                 onChange={handleTextChange}
                 disabled={isAnalyzing}
-                className={`w-full h-32 bg-black/40 border rounded-xl p-4 text-white placeholder-[hsl(var(--text-secondary))] focus:outline-none resize-none transition-all duration-300 font-mono text-sm leading-relaxed ${
-                  isAnalyzing
+                className={`w-full h-32 bg-black/40 border rounded-xl p-4 text-white placeholder-[hsl(var(--text-secondary))] focus:outline-none resize-none transition-all duration-300 font-mono text-sm leading-relaxed ${isAnalyzing
                     ? "analyzing-border-glow cursor-wait"
                     : "border-white/10 focus:border-[#14F195]/60 focus:ring-1 focus:ring-[#14F195]/50 hover:border-white/20"
-                }`}
+                  }`}
                 placeholder="e.g., Send 0.01 SOL to 4Nd1mBQtrMJVYVfKf2PJy9NZUZdTAsp7D4x5bPPxEdZZ"
               />
 
@@ -572,13 +542,12 @@ export default function Dashboard() {
               </h3>
               {report && (
                 <span
-                  className={`text-xs px-3 py-1 rounded-full font-mono font-bold tracking-wide uppercase transition-all duration-300 ${
-                    report.verdict === "READY"
+                  className={`text-xs px-3 py-1 rounded-full font-mono font-bold tracking-wide uppercase transition-all duration-300 ${report.verdict === "READY"
                       ? "bg-[#14F195]/15 text-[#14F195] border border-[#14F195]/40 shadow-[0_0_15px_rgba(20,241,149,0.25)]"
                       : report.verdict === "WARNING"
-                      ? "bg-amber-400/15 text-amber-300 border border-amber-400/40 shadow-[0_0_15px_rgba(245,158,11,0.25)]"
-                      : "bg-rose-500/15 text-rose-300 border border-rose-500/40 shadow-[0_0_20px_rgba(220,38,38,0.4)]"
-                  }`}
+                        ? "bg-amber-400/15 text-amber-300 border border-amber-400/40 shadow-[0_0_15px_rgba(245,158,11,0.25)]"
+                        : "bg-rose-500/15 text-rose-300 border border-rose-500/40 shadow-[0_0_20px_rgba(220,38,38,0.4)]"
+                    }`}
                 >
                   {report.verdict}
                 </span>
