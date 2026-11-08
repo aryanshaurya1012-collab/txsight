@@ -41,3 +41,10 @@ export interface ValidationContext {
   rentExemptBufferLamports?: bigint;
 }
 
+export interface AIAnalysisResult {
+  amount: number;
+  recipient: string;
+  explanation: string;
+}
+
+

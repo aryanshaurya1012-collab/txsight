@@ -351,3 +351,8 @@ export function generateInspectionReport(
     simulationResult,
   };
 }
+
+/**
+ * Alias for generateInspectionReport for Phase 3 API compatibility.
+ */
+export const validateTransactionIntent = generateInspectionReport;

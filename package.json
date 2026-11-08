@@ -13,6 +13,7 @@
     "@babel/traverse": "^8.1.0",
     "@babel/types": "^8.1.0",
     "@eslint-community/eslint-utils": "^4.10.1",
+    "@google/generative-ai": "^0.24.1",
     "@solana-program/system": "^0.16.0",
     "@solana/fixed-points": "^8.6.0",
     "@solana/kit": "^8.6.0",
@@ -25,11 +26,12 @@
     "fast-glob": "^3.3.3",
     "hermes-parser": "^0.37.0",
     "lucide-react": "^1.70.0",
-    "next": "16.4.5",
+    "next": "^16.4.5",
     "object.assign": "^4.1.7",
     "postcss": "^8.5.23",
     "react": "19.3.0",
-    "react-dom": "19.3.0"
+    "react-dom": "19.3.0",
+    "sonner": "^2.0.8"
   },
   "devDependencies": {
     "@tailwindcss/turbopack": "^4",

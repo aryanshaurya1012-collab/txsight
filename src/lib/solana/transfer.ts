@@ -8,6 +8,7 @@ import {
   appendTransactionMessageInstruction,
   compileTransaction,
   getBase64EncodedWireTransaction,
+  getTransactionEncoder,
   createNoopSigner,
   type Blockhash,
 } from "@solana/kit";
@@ -39,20 +40,10 @@ export interface BuildTransferParams {
 
 export interface SimulatingRpcClient {
   rpc: {
-    getLatestBlockhash: () => { send: () => Promise<{ value: LatestBlockhashResult }> };
-    simulateTransaction: (
-      wireTransaction: string,
-      config: { encoding: "base64"; sigVerify: boolean }
-    ) => {
-      send: () => Promise<{
-        value: {
-          err?: unknown;
-          logs?: string[] | null;
-          unitsConsumed?: bigint | number | null;
-          fee?: bigint | number | null;
-        };
-      }>;
-    };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    getLatestBlockhash: (...args: any[]) => { send: () => Promise<any> };
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    simulateTransaction: (...args: any[]) => { send: () => Promise<any> };
   };
 }
 
@@ -104,6 +95,22 @@ export function buildTransferWireTransaction(params: BuildTransferParams): strin
   const message = buildTransferTransactionMessage(params);
   const compiledTransaction = compileTransaction(message);
   return getBase64EncodedWireTransaction(compiledTransaction);
+}
+
+/**
+ * Builds and compiles the transaction message.
+ */
+export function buildTransferTransaction(params: BuildTransferParams) {
+  const message = buildTransferTransactionMessage(params);
+  return compileTransaction(message);
+}
+
+/**
+ * Builds and encodes the transaction into raw byte format (Uint8Array) for wallet standard signing.
+ */
+export function buildTransferTransactionBytes(params: BuildTransferParams): Uint8Array {
+  const compiledTransaction = buildTransferTransaction(params);
+  return new Uint8Array(getTransactionEncoder().encode(compiledTransaction));
 }
 
 /**

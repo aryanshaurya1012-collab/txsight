@@ -18,11 +18,60 @@
   --success: 142 71% 45%;
   --warning: 38 92% 50%;
   --error: 348 83% 47%;
+
+  --solana-purple: #9945FF;
+  --solana-green: #14F195;
 }
 
+/* Advanced Glassmorphism */
 .glass-panel {
-  background-color: hsl(var(--surface-primary));
-  border: 1px solid hsl(var(--surface-secondary));
-  border-radius: 0.75rem;
-  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5), 0 0 15px 0 rgba(255, 255, 255, 0.02);
+}
+
+/* Subtle background grid pattern */
+.bg-grid-ambient {
+  background-image: 
+    radial-gradient(circle at 50% -10%, rgba(153, 69, 255, 0.15) 0%, transparent 55%),
+    radial-gradient(circle at 95% 45%, rgba(20, 241, 149, 0.09) 0%, transparent 45%),
+    radial-gradient(circle at 5% 85%, rgba(153, 69, 255, 0.08) 0%, transparent 45%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+}
+
+/* Staggered fade in animation for checks */
+@keyframes checkFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.check-item-enter {
+  animation: checkFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Glowing border pulse during AI analysis */
+@keyframes borderGlow {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(153, 69, 255, 0.25), inset 0 0 10px rgba(153, 69, 255, 0.1);
+    border-color: rgba(153, 69, 255, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(20, 241, 149, 0.35), inset 0 0 15px rgba(20, 241, 149, 0.15);
+    border-color: rgba(20, 241, 149, 0.6);
+  }
+}
+
+.analyzing-border-glow {
+  animation: borderGlow 2s infinite ease-in-out;
 }
