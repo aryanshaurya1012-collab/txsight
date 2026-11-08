@@ -21,6 +21,7 @@ import {
   Clock,
   ArrowUpRight,
   Cpu,
+  Wallet,
 } from "lucide-react";
 import {
   inspectAndSimulateTransfer,
@@ -195,11 +196,6 @@ export default function Dashboard() {
       return;
     }
 
-    if (!connected) {
-      setErrorMsg("Please connect your wallet first via the top-right button.");
-      return;
-    }
-
     setIsAnalyzing(true);
     try {
       // 1. Parse intent and risk explanation with Gemini AI
@@ -212,20 +208,27 @@ export default function Dashboard() {
       };
       setLastParsedIntent(parsed);
 
-      // 2. Fetch current sender balance from Devnet RPC
-      let balanceLamports = 0n;
-      try {
-        const balanceResp = await client.rpc
-          .getBalance(address(connected.account.address), { commitment: "confirmed" })
-          .send();
-        balanceLamports = balanceResp.value;
-      } catch (balErr) {
-        console.warn("Could not fetch balance from Devnet RPC, defaulting to 0:", balErr);
+      // 2. Fetch current sender balance from Devnet RPC if connected, or use sandbox balance
+      let balanceLamports = 2_000_000_000n; // 2.0 SOL demo sandbox balance
+      const senderAddress = connected
+        ? connected.account.address
+        : "9WzDXwBbmkg8ZTbNMqUxvQRAyrZzDsGYdLVL9zYtAWWM";
+
+      if (connected) {
+        try {
+          const balanceResp = await client.rpc
+            .getBalance(address(connected.account.address), { commitment: "confirmed" })
+            .send();
+          balanceLamports = balanceResp.value;
+        } catch (balErr) {
+          console.warn("Could not fetch balance from Devnet RPC, defaulting to 0:", balErr);
+          balanceLamports = 0n;
+        }
       }
 
       // 3. Construct ValidationContext & TransferIntent
       const context: ValidationContext = {
-        senderAddress: connected.account.address,
+        senderAddress,
         senderBalanceLamports: balanceLamports,
       };
 
@@ -446,6 +449,23 @@ export default function Dashboard() {
                       isExecuting={isExecuting}
                       verdict={report.verdict}
                     />
+                  ) : report &&
+                    (report.verdict === "READY" || report.verdict === "WARNING") &&
+                    !connected ? (
+                    <motion.button
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={() => {
+                        toast.info("Wallet Connection Required to Broadcast", {
+                          description:
+                            "Please connect your Solana Devnet wallet via the top-right button to sign and broadcast this transaction on-chain.",
+                        });
+                      }}
+                      className="flex items-center gap-2 bg-gradient-to-r from-[#9945FF] to-[#14F195] text-black font-semibold hover:brightness-110 px-6 py-2.5 rounded-xl transition-all duration-300 shadow-[0_0_18px_rgba(153,69,255,0.35)] hover:shadow-[0_0_25px_rgba(20,241,149,0.5)]"
+                    >
+                      <Wallet className="w-4 h-4 text-black" />
+                      Connect Wallet to Execute
+                    </motion.button>
                   ) : (
                     <motion.button
                       whileHover={{ scale: 1.03 }}
@@ -537,9 +557,16 @@ export default function Dashboard() {
             className="bg-white/[0.02] backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
           >
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-sm font-semibold text-[hsl(var(--text-secondary))] uppercase tracking-wider">
-                Security Checks
-              </h3>
+              <div className="flex items-center gap-2">
+                <h3 className="text-sm font-semibold text-[hsl(var(--text-secondary))] uppercase tracking-wider">
+                  Security Checks
+                </h3>
+                {report && !connected && (
+                  <span className="text-[10px] font-mono px-2 py-0.5 rounded-md bg-white/5 text-[#14F195] border border-[#14F195]/30">
+                    Sandbox
+                  </span>
+                )}
+              </div>
               {report && (
                 <span
                   className={`text-xs px-3 py-1 rounded-full font-mono font-bold tracking-wide uppercase transition-all duration-300 ${report.verdict === "READY"

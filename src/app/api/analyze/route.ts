@@ -109,16 +109,16 @@ Analyze the provided on-chain transaction data and explain in 2-3 clear, human-r
 
     // Fallback parser for local development or demo environments when GEMINI_API_KEY is not yet configured
     if (!apiKey || apiKey === "your-gemini-api-key-here" || apiKey.trim() === "") {
-      const fallbackRegex =
-        /(?:send|transfer|pay)\s+([0-9]*\.?[0-9]+)\s*(?:sol)?\s*(?:to\s+)?([1-9A-HJ-NP-Za-km-z]{32,44})/i;
-      const match = prompt.match(fallbackRegex);
-      if (match) {
-        const amount = parseFloat(match[1]);
-        const recipient = match[2];
+      const addressMatch = prompt.match(/([1-9A-HJ-NP-Za-km-z]{32,44})/);
+      const amountMatch = prompt.match(/([0-9]*\.?[0-9]+)\s*(?:sol)?/i);
+
+      if (addressMatch) {
+        const amount = amountMatch ? parseFloat(amountMatch[1]) : 0;
+        const recipient = addressMatch[1];
         const result: AIAnalysisResult = {
           amount,
           recipient,
-          explanation: `[Demo AI Mode - GEMINI_API_KEY not configured] Transferring ${amount} SOL to ${recipient.slice(0, 4)}...${recipient.slice(-4)}. Native SOL transfers are final and irreversible on the Solana network.`,
+          explanation: `[Demo AI Mode] Transferring ${amount} SOL to ${recipient.slice(0, 4)}...${recipient.slice(-4)}. Native SOL transfers are final and irreversible on the Solana network.`,
         };
         return NextResponse.json(result);
       }
@@ -126,7 +126,7 @@ Analyze the provided on-chain transaction data and explain in 2-3 clear, human-r
       return NextResponse.json(
         {
           error:
-            "GEMINI_API_KEY is not configured in .env.local. Please configure your Gemini API key, or format the prompt like 'Send <amount> SOL to <address>'.",
+            "Could not detect a valid Solana recipient address in your prompt. Please format as: 'Send <amount> SOL to <SolanaBase58Address>', or configure GEMINI_API_KEY in .env.local for full conversational AI parsing.",
         },
         { status: 400 }
       );
