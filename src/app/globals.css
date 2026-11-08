@@ -1,21 +1,21 @@
 @import "tailwindcss";
 
 :root {
-  --background: 222 31% 8%;
-  /* #090F1D */
-  --surface-primary: 219 46% 12%;
-  /* #111B2D */
-  --surface-secondary: 218 41% 16%;
-  /* #18253A */
-  --accent: 188 86% 53%;
-  /* cyan */
-  --accent-foreground: 188 90% 10%;
+  --background: 247 48% 6%;
+  /* Deep space #0c0a1d */
+  --surface-primary: 246 38% 10%;
+  /* #110e24 */
+  --surface-secondary: 245 32% 14%;
+  /* #191533 */
+  --accent: 161 88% 51%;
+  /* #14F195 Solana Cyan-Green */
+  --accent-foreground: 247 48% 6%;
   --text-primary: 218 54% 96%;
   /* #F4F7FC */
-  --text-secondary: 214 20% 67%;
-  /* #9AA9BD */
+  --text-secondary: 240 15% 65%;
+  /* #9ca3af */
 
-  --success: 142 71% 45%;
+  --success: 161 88% 51%;
   --warning: 38 92% 50%;
   --error: 348 83% 47%;
 
@@ -23,34 +23,85 @@
   --solana-green: #14F195;
 }
 
-/* Advanced Glassmorphism */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+/* Deep Animated Mesh Gradient with Solana Colorway */
+.bg-solana-mesh {
+  background-color: #0b091a;
+  background-image: 
+    radial-gradient(circle at 15% 15%, rgba(153, 69, 255, 0.18) 0px, transparent 40%),
+    radial-gradient(circle at 85% 20%, rgba(20, 241, 149, 0.14) 0px, transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(153, 69, 255, 0.15) 0px, transparent 45%),
+    radial-gradient(circle at 20% 85%, rgba(20, 241, 149, 0.12) 0px, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(15, 12, 41, 0.85) 0%, #0b091a 100%),
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 44px 44px, 44px 44px;
+}
+
+/* Glassmorphism 2.0 */
+.glass-panel, .glass-card-premium {
+  background: rgba(255, 255, 255, 0.025);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 1rem;
-  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.5), 0 0 15px 0 rgba(255, 255, 255, 0.02);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.45), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
 }
 
-/* Subtle background grid pattern */
-.bg-grid-ambient {
-  background-image:
-    radial-gradient(circle at 50% -10%, rgba(153, 69, 255, 0.15) 0%, transparent 55%),
-    radial-gradient(circle at 95% 45%, rgba(20, 241, 149, 0.09) 0%, transparent 45%),
-    radial-gradient(circle at 5% 85%, rgba(153, 69, 255, 0.08) 0%, transparent 45%),
-    linear-gradient(to right, rgba(255, 255, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+/* Floating animated glowing orbs */
+@keyframes orbFloat1 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: translate(40px, -35px) scale(1.12);
+    opacity: 0.85;
+  }
 }
 
-/* Staggered fade in animation for checks */
+@keyframes orbFloat2 {
+  0%, 100% {
+    transform: translate(0px, 0px) scale(1);
+    opacity: 0.55;
+  }
+  50% {
+    transform: translate(-35px, 40px) scale(1.15);
+    opacity: 0.8;
+  }
+}
+
+.solana-orb-1 {
+  animation: orbFloat1 14s ease-in-out infinite;
+}
+
+.solana-orb-2 {
+  animation: orbFloat2 18s ease-in-out infinite;
+}
+
+/* Sweeping gradient animation for active execution button */
+@keyframes gradientSweep {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.gradient-sweep {
+  background-size: 200% 200%;
+  animation: gradientSweep 3s ease infinite;
+}
+
+/* Staggered check item entry animation */
 @keyframes checkFadeIn {
   from {
     opacity: 0;
     transform: translateY(6px);
   }
-
   to {
     opacity: 1;
     transform: translateY(0);
@@ -63,16 +114,13 @@
 
 /* Glowing border pulse during AI analysis */
 @keyframes borderGlow {
-
-  0%,
-  100% {
-    box-shadow: 0 0 15px rgba(153, 69, 255, 0.25), inset 0 0 10px rgba(153, 69, 255, 0.1);
-    border-color: rgba(153, 69, 255, 0.5);
+  0%, 100% {
+    box-shadow: 0 0 18px rgba(153, 69, 255, 0.3), inset 0 0 12px rgba(153, 69, 255, 0.12);
+    border-color: rgba(153, 69, 255, 0.6);
   }
-
   50% {
-    box-shadow: 0 0 25px rgba(20, 241, 149, 0.35), inset 0 0 15px rgba(20, 241, 149, 0.15);
-    border-color: rgba(20, 241, 149, 0.6);
+    box-shadow: 0 0 28px rgba(20, 241, 149, 0.4), inset 0 0 18px rgba(20, 241, 149, 0.18);
+    border-color: rgba(20, 241, 149, 0.7);
   }
 }
 

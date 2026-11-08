@@ -3,6 +3,7 @@
 import { useClient, useRequest } from "@solana/react";
 import { useMemo } from "react";
 import { useConnectedWallet } from "@solana/kit-plugin-wallet/react";
+import { motion } from "framer-motion";
 
 export function BalancePanel() {
   const client = useClient();
@@ -18,7 +19,15 @@ export function BalancePanel() {
   if (!connected) return null;
 
   return (
-    <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 flex flex-col gap-2 transition-all duration-300 shadow-xl">
+    <motion.div
+      whileHover={{
+        scale: 1.015,
+        y: -4,
+        boxShadow: "0 16px 40px -10px rgba(0,0,0,0.6), 0 0 20px 2px rgba(20,241,149,0.15)",
+      }}
+      transition={{ duration: 0.25 }}
+      className="bg-white/[0.02] backdrop-blur-xl border border-white/10 rounded-2xl p-6 flex flex-col gap-2 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+    >
       <h3 className="text-sm font-semibold text-[hsl(var(--text-secondary))] uppercase tracking-wider">Available Balance</h3>
       <div className="flex items-end gap-2">
         {status === "fetching" || status === "pending" ? (
@@ -41,6 +50,6 @@ export function BalancePanel() {
       >
         Refresh Balance
       </button>
-    </div>
+    </motion.div>
   );
 }

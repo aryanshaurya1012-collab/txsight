@@ -7,6 +7,7 @@ import { address, getBase58Decoder } from "@solana/kit";
 import { WalletPanel } from "@/components/WalletPanel";
 import { BalancePanel } from "@/components/BalancePanel";
 import { toast } from "sonner";
+import { motion, type Variants } from "framer-motion";
 import {
   ShieldCheck,
   Activity,
@@ -50,6 +51,44 @@ export interface ActivityItem {
 }
 
 /**
+ * Framer Motion Animation Variants
+ */
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.12,
+      delayChildren: 0.08,
+    },
+  },
+};
+
+const cardVariants: Variants = {
+  hidden: { opacity: 0, y: 24, scale: 0.98 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: {
+      type: "spring",
+      stiffness: 110,
+      damping: 15,
+    },
+  },
+};
+
+const card3DHover = {
+  whileHover: {
+    scale: 1.015,
+    y: -4,
+    boxShadow:
+      "0 20px 40px -10px rgba(0,0,0,0.7), 0 0 25px 2px rgba(153,69,255,0.18)",
+  },
+  transition: { duration: 0.25 },
+};
+
+/**
  * Calls the backend Gemini AI analysis endpoint to extract intent and generate safety explanations.
  */
 async function analyzeIntentWithAI(prompt: string): Promise<AIAnalysisResult> {
@@ -89,13 +128,15 @@ function ExecuteButton({
   const signAndSendTransaction = useSignAndSendTransaction(account, "solana:devnet");
 
   return (
-    <button
+    <motion.button
+      whileHover={{ scale: 1.04 }}
+      whileTap={{ scale: 0.96 }}
       onClick={() => onExecute(signAndSendTransaction)}
       disabled={isExecuting}
-      className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 transform active:scale-95 ${
+      className={`flex items-center gap-2 px-6 py-2.5 rounded-xl font-semibold transition-all duration-300 ${
         verdict === "WARNING"
           ? "bg-gradient-to-r from-amber-500 to-amber-400 text-black hover:brightness-110 shadow-[0_0_20px_rgba(245,158,11,0.35)]"
-          : "bg-gradient-to-r from-[#9945FF] to-[#14F195] text-black hover:brightness-110 shadow-[0_0_20px_rgba(20,241,149,0.35)] hover:shadow-[0_0_25px_rgba(20,241,149,0.5)]"
+          : "gradient-sweep bg-gradient-to-r from-[#9945FF] via-[#14F195] to-[#9945FF] text-black hover:brightness-110 shadow-[0_0_25px_rgba(20,241,149,0.45)] animate-pulse"
       } disabled:opacity-50 disabled:cursor-not-allowed`}
     >
       {isExecuting ? (
@@ -109,7 +150,7 @@ function ExecuteButton({
           <span>Sign & Execute Transaction</span>
         </>
       )}
-    </button>
+    </motion.button>
   );
 }
 
@@ -283,27 +324,27 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="min-h-screen bg-[hsl(var(--background))] bg-grid-ambient relative overflow-x-hidden">
-      {/* Ambient glowing radial orbs for Web3 depth */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-[#9945FF]/10 rounded-full blur-3xl pointer-events-none -z-10 animate-pulse" />
-      <div className="absolute top-1/3 right-10 w-96 h-96 bg-[#14F195]/10 rounded-full blur-3xl pointer-events-none -z-10" />
-      <div className="absolute bottom-10 left-10 w-80 h-80 bg-[#9945FF]/8 rounded-full blur-3xl pointer-events-none -z-10" />
+    <div className="min-h-screen bg-solana-mesh relative overflow-x-hidden">
+      {/* Floating ambient glowing radial orbs for 3D depth */}
+      <div className="absolute -top-24 left-1/4 w-[500px] h-[500px] bg-[#9945FF]/18 rounded-full blur-[120px] pointer-events-none -z-10 solana-orb-1" />
+      <div className="absolute top-1/3 right-10 w-[550px] h-[550px] bg-[#14F195]/14 rounded-full blur-[130px] pointer-events-none -z-10 solana-orb-2" />
+      <div className="absolute -bottom-24 left-12 w-[450px] h-[450px] bg-[#9945FF]/14 rounded-full blur-[110px] pointer-events-none -z-10 solana-orb-1" />
 
       {/* Navigation Bar */}
-      <nav className="border-b border-white/10 bg-[hsl(var(--background))]/60 backdrop-blur-xl sticky top-0 z-50 transition-all duration-300">
+      <nav className="border-b border-white/10 bg-[#0b091a]/70 backdrop-blur-xl sticky top-0 z-50 transition-all duration-300">
         <div className="max-w-6xl mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-8">
             <div className="flex items-center gap-2.5">
-              <div className="p-1.5 rounded-lg bg-gradient-to-br from-[#9945FF] to-[#14F195] shadow-[0_0_12px_rgba(20,241,149,0.3)]">
+              <div className="p-1.5 rounded-lg bg-gradient-to-br from-[#9945FF] to-[#14F195] shadow-[0_0_15px_rgba(20,241,149,0.35)]">
                 <ShieldCheck className="w-5 h-5 text-black" />
               </div>
-              <span className="text-lg font-bold text-white tracking-tight bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text">
+              <span className="text-lg font-bold text-white tracking-tight bg-gradient-to-r from-white via-gray-100 to-gray-300 bg-clip-text">
                 TxSight
               </span>
             </div>
             <div className="hidden md:flex items-center gap-6 text-sm font-medium text-[hsl(var(--text-secondary))]">
               <span className="text-[#14F195] font-semibold flex items-center gap-1.5">
-                <div className="w-1.5 h-1.5 rounded-full bg-[#14F195] shadow-[0_0_6px_#14F195]" />
+                <div className="w-1.5 h-1.5 rounded-full bg-[#14F195] shadow-[0_0_8px_#14F195]" />
                 Dashboard
               </span>
               <span className="hover:text-white cursor-not-allowed opacity-50 transition-colors">Inspector</span>
@@ -311,7 +352,7 @@ export default function Dashboard() {
           </div>
 
           <div className="flex items-center gap-4">
-            <div className="hidden md:flex items-center gap-1.5 bg-white/5 backdrop-blur-md px-3 py-1 rounded-full border border-amber-400/20 shadow-[0_0_10px_rgba(245,158,11,0.1)]">
+            <div className="hidden md:flex items-center gap-1.5 bg-white/5 backdrop-blur-md px-3 py-1 rounded-full border border-amber-400/20 shadow-[0_0_12px_rgba(245,158,11,0.15)]">
               <div className="w-2 h-2 rounded-full bg-amber-400 animate-pulse" />
               <span className="text-xs font-mono font-medium text-amber-300 uppercase tracking-wider">Devnet</span>
             </div>
@@ -320,14 +361,23 @@ export default function Dashboard() {
         </div>
       </nav>
 
-      {/* Main Dashboard */}
-      <main className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
+      {/* Main Dashboard Animated Container */}
+      <motion.main
+        variants={containerVariants}
+        initial="hidden"
+        animate="visible"
+        className="max-w-6xl mx-auto px-6 py-10 grid grid-cols-1 lg:grid-cols-3 gap-8"
+      >
         {/* Left Column: Balance & Transaction Input */}
         <div className="lg:col-span-2 space-y-6">
           <BalancePanel />
 
           {/* Transaction Request Panel */}
-          <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 shadow-xl transition-all duration-300">
+          <motion.div
+            variants={cardVariants}
+            {...card3DHover}
+            className="bg-white/[0.02] backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+          >
             <div className="pb-5 border-b border-white/10 flex items-center justify-between">
               <div>
                 <h2 className="text-lg font-semibold text-white flex items-center gap-2">
@@ -412,7 +462,7 @@ export default function Dashboard() {
                   ) : report?.verdict === "BLOCKED" ? (
                     <button
                       disabled
-                      className="flex items-center gap-2 bg-rose-950/50 text-rose-300 border border-rose-800/60 px-6 py-2.5 rounded-xl font-medium cursor-not-allowed shadow-[0_0_15px_rgba(244,63,94,0.2)] transition-all duration-300"
+                      className="flex items-center gap-2 bg-rose-950/70 text-rose-300 border border-rose-500/50 px-6 py-2.5 rounded-xl font-medium cursor-not-allowed shadow-[0_0_20px_rgba(220,38,38,0.4)] transition-all duration-300"
                     >
                       <XCircle className="w-4 h-4 text-rose-400" />
                       Transaction Blocked
@@ -427,25 +477,31 @@ export default function Dashboard() {
                       verdict={report.verdict}
                     />
                   ) : (
-                    <button
+                    <motion.button
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
                       onClick={handleAnalyze}
                       disabled={!inputText.trim() || isAnalyzing}
-                      className="flex items-center gap-2 bg-gradient-to-r from-[#9945FF] to-[#14F195] text-black font-semibold hover:brightness-110 active:scale-95 px-6 py-2.5 rounded-xl transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_0_15px_rgba(153,69,255,0.3)] hover:shadow-[0_0_20px_rgba(20,241,149,0.4)]"
+                      className="flex items-center gap-2 bg-gradient-to-r from-[#9945FF] to-[#14F195] text-black font-semibold hover:brightness-110 px-6 py-2.5 rounded-xl transition-all duration-300 disabled:opacity-40 disabled:cursor-not-allowed shadow-[0_0_18px_rgba(153,69,255,0.35)] hover:shadow-[0_0_25px_rgba(20,241,149,0.5)]"
                     >
                       <Sparkles className="w-4 h-4 text-black" />
                       Analyze Intent
-                    </button>
+                    </motion.button>
                   )}
                 </div>
               </div>
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* Right Column: AI Analysis, Security Checks & Activity */}
         <div className="space-y-6">
           {/* AI ANALYSIS PANEL */}
-          <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 shadow-xl transition-all duration-300">
+          <motion.div
+            variants={cardVariants}
+            {...card3DHover}
+            className="bg-white/[0.02] backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+          >
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-semibold text-[hsl(var(--text-secondary))] uppercase tracking-wider flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-[#14F195]" />
@@ -502,10 +558,14 @@ export default function Dashboard() {
                 </p>
               </div>
             )}
-          </div>
+          </motion.div>
 
           {/* DYNAMIC SECURITY CHECKS PANEL */}
-          <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 shadow-xl transition-all duration-300">
+          <motion.div
+            variants={cardVariants}
+            {...card3DHover}
+            className="bg-white/[0.02] backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+          >
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-sm font-semibold text-[hsl(var(--text-secondary))] uppercase tracking-wider">
                 Security Checks
@@ -517,7 +577,7 @@ export default function Dashboard() {
                       ? "bg-[#14F195]/15 text-[#14F195] border border-[#14F195]/40 shadow-[0_0_15px_rgba(20,241,149,0.25)]"
                       : report.verdict === "WARNING"
                       ? "bg-amber-400/15 text-amber-300 border border-amber-400/40 shadow-[0_0_15px_rgba(245,158,11,0.25)]"
-                      : "bg-rose-500/15 text-rose-300 border border-rose-500/40 shadow-[0_0_15px_rgba(244,63,94,0.25)]"
+                      : "bg-rose-500/15 text-rose-300 border border-rose-500/40 shadow-[0_0_20px_rgba(220,38,38,0.4)]"
                   }`}
                 >
                   {report.verdict}
@@ -585,10 +645,14 @@ export default function Dashboard() {
                 <span className="text-[#14F195] font-semibold">{report.simulationResult.unitsConsumed?.toString() ?? 0} CU consumed</span>
               </div>
             )}
-          </div>
+          </motion.div>
 
           {/* DYNAMIC RECENT ACTIVITY PANEL */}
-          <div className="bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl p-6 shadow-xl transition-all duration-300">
+          <motion.div
+            variants={cardVariants}
+            {...card3DHover}
+            className="bg-white/[0.02] backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-[0_8px_32px_rgba(0,0,0,0.4)]"
+          >
             <h3 className="text-sm font-semibold text-[hsl(var(--text-secondary))] uppercase tracking-wider mb-4 flex items-center gap-2">
               <Activity className="w-4 h-4 text-[#9945FF]" />
               Recent Activity
@@ -638,9 +702,9 @@ export default function Dashboard() {
                 ))}
               </div>
             )}
-          </div>
+          </motion.div>
         </div>
-      </main>
+      </motion.main>
     </div>
   );
 }
