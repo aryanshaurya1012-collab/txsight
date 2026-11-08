@@ -35,7 +35,7 @@
 
 /* Subtle background grid pattern */
 .bg-grid-ambient {
-  background-image: 
+  background-image:
     radial-gradient(circle at 50% -10%, rgba(153, 69, 255, 0.15) 0%, transparent 55%),
     radial-gradient(circle at 95% 45%, rgba(20, 241, 149, 0.09) 0%, transparent 45%),
     radial-gradient(circle at 5% 85%, rgba(153, 69, 255, 0.08) 0%, transparent 45%),
@@ -50,6 +50,7 @@
     opacity: 0;
     transform: translateY(6px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -62,10 +63,13 @@
 
 /* Glowing border pulse during AI analysis */
 @keyframes borderGlow {
-  0%, 100% {
+
+  0%,
+  100% {
     box-shadow: 0 0 15px rgba(153, 69, 255, 0.25), inset 0 0 10px rgba(153, 69, 255, 0.1);
     border-color: rgba(153, 69, 255, 0.5);
   }
+
   50% {
     box-shadow: 0 0 25px rgba(20, 241, 149, 0.35), inset 0 0 15px rgba(20, 241, 149, 0.15);
     border-color: rgba(20, 241, 149, 0.6);
